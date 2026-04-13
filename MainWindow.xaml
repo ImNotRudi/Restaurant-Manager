@@ -1,0 +1,393 @@
+﻿<Window x:Class="WpfApp1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Restaurant Manager" Height="800" Width="1200" 
+        Background="{DynamicResource WindowBackground}">
+    <Grid>
+
+        <Grid x:Name="WorkerView" Visibility="Visible">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="320"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,30">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Restaurant Manager" FontSize="28" FontWeight="Bold" 
+                           Foreground="{DynamicResource PrimaryText}"/>
+                        <TextBlock Text="Worker Dashboard" FontSize="14" 
+                           Foreground="{DynamicResource SecondaryText}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Button Content="🌙" Click="DarkMode_Click"
+                        Background="{DynamicResource CardBackground}" 
+                        Foreground="{DynamicResource PrimaryText}"
+                        BorderBrush="{DynamicResource BorderColor}"
+                        BorderThickness="1" Width="40" Height="40" Margin="0,0,10,0">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+
+                        <Button Content="📊 Manager View" 
+                        Click="ToManager_Click" 
+                        Background="#059669" 
+                        Foreground="White" 
+                        Padding="15,8" 
+                        BorderThickness="0" 
+                        FontWeight="SemiBold">
+                        <Button.Resources>
+                        <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                        </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+
+                <UniformGrid Grid.Row="1" Columns="4" Margin="0,0,0,30">
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Margin="0,0,15,0" Padding="20" 
+                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="👤 Current Guests" Foreground="{DynamicResource SecondaryText}" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding CurrentGuests}" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource PrimaryText}"/>
+                            <TextBlock Text="of 46 capacity" Foreground="{DynamicResource SecondaryText}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Margin="0,0,15,0" Padding="20" 
+                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="🛋️ Available Seats" Foreground="{DynamicResource SecondaryText}" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding FreeSeats}" FontSize="32" FontWeight="Bold" Foreground="#2563EB"/>
+                            <TextBlock Text="{Binding FreeTables, StringFormat='{}{0} free tables'}" Foreground="{DynamicResource SecondaryText}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Margin="0,0,15,0" Padding="20" 
+                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="🕒 Waiting" Foreground="{DynamicResource SecondaryText}" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding WaitingList.Count}" FontSize="32" FontWeight="Bold" Foreground="#EA580C"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Padding="20" 
+                    BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="📈 Occupancy" Foreground="{DynamicResource SecondaryText}" Margin="0,0,0,10"/>
+                            <TextBlock Text="{Binding Occupancy}" FontSize="32" FontWeight="Bold" Foreground="#7C3AED"/>
+                            <TextBlock Text="{Binding OccupiedTables, StringFormat='{}{0} tables occupied'}" Foreground="{DynamicResource SecondaryText}"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource CardBackground}" 
+        CornerRadius="12" Padding="25" Margin="0,0,20,0" 
+        BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" BorderThickness="0">
+                        <StackPanel>
+                            <TextBlock Text="Restaurant Hall" FontWeight="SemiBold" FontSize="18" 
+                       Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,30"/>
+
+                            <ItemsControl ItemsSource="{Binding Tables}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Click="Table_Click" Margin="10" Background="Transparent" BorderThickness="0">
+                                            <Border Width="100" Height="100" Background="{Binding Color}" CornerRadius="8">
+                                                <StackPanel VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Number}" Foreground="White" FontWeight="Bold" HorizontalAlignment="Center" FontSize="20"/>
+                                                    <TextBlock Foreground="White" HorizontalAlignment="Center">
+                            <Run Text="{Binding GuestCount}"/> / <Run Text="{Binding Capacity}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <StackPanel Grid.Row="2" Grid.Column="1">
+                    <Button Content="+ Add New Guest" Click="AddGuest_Click" Background="#059669" Foreground="White" Height="50" BorderThickness="0" FontWeight="Bold" Margin="0,0,0,20">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Padding="15" Margin="0,0,0,20" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontWeight="Bold" Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,15">
+            <Run Text="🕒 Waiting ("/>
+            <Run Text="{Binding WaitingList.Count, Mode=OneWay}"/>
+            <Run Text=")"/>
+                            </TextBlock>
+
+                            <ItemsControl ItemsSource="{Binding WaitingList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource BorderColor}" 
+                                        BorderThickness="0,0,0,1" 
+                                        Padding="8,5" 
+                                        Cursor="Hand"
+                                        MouseLeftButtonDown="SelectGuest_Click">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="Transparent"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                            <Setter Property="Background" Value="#E2E8F0"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="50"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding ArrivalTime}" Foreground="{DynamicResource SecondaryText}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" FontWeight="SemiBold" Foreground="{DynamicResource PrimaryText}" Margin="5,0" VerticalAlignment="Center"/>
+
+                                                <Border Grid.Column="2" Background="#FFF7ED" CornerRadius="6" Padding="8,3" BorderBrush="#FED7AA" BorderThickness="1">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding PeopleCount}" Foreground="#9A3412" FontWeight="ExtraBold" FontSize="12"/>
+                                                        <TextBlock Text=" ppl" Foreground="#9A3412" FontSize="10" FontWeight="SemiBold" VerticalAlignment="Center" Margin="2,0,0,0"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="No guests in queue" HorizontalAlignment="Center" Margin="0,15" Foreground="{DynamicResource SecondaryText}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding WaitingList.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="8" Padding="15" BorderBrush="{DynamicResource BorderColor}" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock FontWeight="Bold" Foreground="{DynamicResource PrimaryText}" Margin="0,0,0,15">
+            <Run Text="🛋️ Seated ("/>
+            <Run Text="{Binding SeatedList.Count, Mode=OneWay}"/>
+            <Run Text=")"/>
+                            </TextBlock>
+
+                            <ItemsControl ItemsSource="{Binding SeatedList}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" Padding="8,5">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding TableNumber, StringFormat='T{0}'}" 
+                                       FontWeight="Bold" Foreground="#2563EB" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Name}" Foreground="{DynamicResource PrimaryText}" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding PeopleCount, StringFormat='{}{0} ppl'}" 
+                                       Foreground="{DynamicResource SecondaryText}" FontSize="11" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock Text="No seated guests" HorizontalAlignment="Center" Margin="0,15" Foreground="{DynamicResource SecondaryText}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding SeatedList.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+        <Grid x:Name="ManagerView" Visibility="Collapsed" Background="#F1F5F9">
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Background="White" Padding="25,10" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1">
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Left">
+                            <TextBlock Text="Restaurant Manager" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                            <TextBlock Text="Manager Dashboard" FontSize="12" Foreground="#64748B"/>
+                        </StackPanel>
+
+                        <Button Content="← Back to Worker View" Click="ToWorker_Click" 
+                HorizontalAlignment="Right" Padding="15,5" Height="35"
+                Background="#F8FAFC" Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6"/>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <UniformGrid Columns="2" Margin="20">
+                    <Border Background="White" Margin="10" CornerRadius="12" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="🛋️ Table Status" FontSize="16" FontWeight="Bold" Margin="0,0,0,20"/>
+                            <ItemsControl ItemsSource="{Binding Tables}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="0,10">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Ellipse Width="8" Height="8" Margin="0,0,10,0" VerticalAlignment="Center">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="Ellipse">
+                                                            <Setter Property="Fill" Value="#10B981"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsOccupied}" Value="True">
+                                                                    <Setter Property="Fill" Value="#EF4444"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+
+                                                <TextBlock Grid.Column="1" Text="{Binding Number, StringFormat='Table {0}'}" FontWeight="SemiBold"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding Capacity, StringFormat='Capacity: {0}'}" Foreground="#64748B"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" Margin="10" CornerRadius="12" Padding="20">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                                <TextBlock Text="👥 Guest Activity" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text=" (Today Only)" Foreground="Gray" FontSize="12" VerticalAlignment="Bottom" Margin="5,0,0,2"/>
+                            </StackPanel>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="500">
+                                <ItemsControl ItemsSource="{Binding CompletedList}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="10,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <StackPanel>
+                                                        <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Border Padding="6,2" CornerRadius="4" Margin="0,4,8,0">
+                                                                <Border.Style>
+                                                                    <Style TargetType="Border">
+                                                                        <Style.Triggers>
+                                                                            <DataTrigger Binding="{Binding IsSeated}" Value="False">
+                                                                                <Setter Property="Background" Value="#FEF3C7"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsSeated}" Value="True">
+                                                                                <Setter Property="Background" Value="#DBEAFE"/>
+                                                                            </DataTrigger>
+                                                                            <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                                <Setter Property="Background" Value="#D1FAE5"/>
+                                                                            </DataTrigger>
+                                                                        </Style.Triggers>
+                                                                    </Style>
+                                                                </Border.Style>
+                                                                <TextBlock FontSize="10" FontWeight="Bold">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="TextBlock">
+                                                                            <Style.Triggers>
+                                                                                <DataTrigger Binding="{Binding IsSeated}" Value="False">
+                                                                                    <Setter Property="Text" Value="WAITING"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsSeated}" Value="True">
+                                                                                    <Setter Property="Text" Value="SEATED"/>
+                                                                                </DataTrigger>
+                                                                                <DataTrigger Binding="{Binding IsCompleted}" Value="True">
+                                                                                    <Setter Property="Text" Value="COMPLETED"/>
+                                                                                </DataTrigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </Border>
+                                                            <TextBlock Text="{Binding PeopleCount, StringFormat='{}{0} people'}" FontSize="11" Foreground="Gray"/>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+                                                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                        <TextBlock Text="{Binding ArrivalTime, StringFormat='In: {0}'}" FontSize="11" Foreground="#64748B" HorizontalAlignment="Right"/>
+                                                        <TextBlock Text="{Binding CheckoutTime, StringFormat='Out: {0}'}" FontSize="11" Foreground="#2563EB" FontWeight="SemiBold" HorizontalAlignment="Right">
+                                                            <TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding CheckoutTime}" Value="{x:Null}">
+                                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>
+                                                        </TextBlock>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+            </DockPanel>
+        </Grid>
+    </Grid>
+</Window>
