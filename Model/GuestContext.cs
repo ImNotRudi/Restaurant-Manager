@@ -14,6 +14,7 @@ namespace WpfApp1.Model
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
            optionsBuilder.UseSqlite("Data Source=GuestDB.db");
+
         }
     }
 }
